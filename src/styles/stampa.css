@@ -1,0 +1,178 @@
+/**
+ * stampa.css — foglio di stile per la scheda stampabile.
+ *
+ * La scheda NON e' l'app. Su carta il fondo nero e' un errore: i browser
+ * lo rimuovono di default e forzarlo consuma una cartuccia per rullino.
+ * Palette rovesciata — nero su bianco — stessi font.
+ *
+ * Percorso: Chrome Android → menu → Stampa → Salva come PDF.
+ * L'utente puo' disattivare intestazione e pie' di pagina di Chrome
+ * dalle Altre impostazioni del dialogo.
+ */
+
+/* In video la scheda non esiste. */
+#scheda-stampa { display: none; }
+
+@media print {
+
+  @page {
+    size: A4 portrait;
+    margin: 18mm 16mm 16mm;
+  }
+
+  /* L'app sparisce, resta la scheda. */
+  #root { display: none !important; }
+
+  #scheda-stampa {
+    display: block;
+    background: #ffffff;
+    color: #000000;
+    font-family: 'Gelasio', Georgia, serif;
+    font-size: 10.5pt;
+    line-height: 1.4;
+  }
+
+  html, body {
+    background: #ffffff !important;
+    margin: 0;
+    padding: 0;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* ─── un rullino per pagina ─── */
+
+  .sk-rullino { break-after: page; }
+  .sk-rullino:last-child { break-after: auto; }
+
+  /* ─── testata ─── */
+
+  .sk-testata {
+    border-bottom: 1.6pt solid #000;
+    padding-bottom: 5mm;
+    margin-bottom: 6mm;
+  }
+
+  .sk-titolo {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 22pt;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin: 0 0 1mm;
+  }
+
+  .sk-sottotitolo {
+    font-size: 10pt;
+    font-style: italic;
+    color: #444;
+    margin: 0;
+  }
+
+  /* ─── dati del rullino: due colonne ─── */
+
+  .sk-dati {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2mm 10mm;
+    margin-bottom: 6mm;
+  }
+
+  .sk-dato { display: flex; gap: 3mm; }
+
+  .sk-etichetta {
+    font-size: 7.5pt;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #666;
+    min-width: 26mm;
+    padding-top: 0.6mm;
+  }
+
+  .sk-valore { font-variant-numeric: tabular-nums; }
+
+  /* Il push/pull e' il dato che serve al laboratorio: si vede per primo. */
+  .sk-spinta {
+    display: inline-block;
+    border: 1pt solid #000;
+    padding: 0.6mm 2mm;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    font-size: 9pt;
+  }
+
+  /* ─── tabella scatti ─── */
+
+  .sk-tabella {
+    width: 100%;
+    border-collapse: collapse;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .sk-tabella thead th {
+    font-size: 7.5pt;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #666;
+    text-align: left;
+    font-weight: 400;
+    border-bottom: 0.8pt solid #000;
+    padding: 0 2mm 1.5mm 0;
+  }
+
+  /* La testata si ripete se un rullino lungo va su due pagine. */
+  .sk-tabella thead { display: table-header-group; }
+
+  .sk-tabella tbody tr {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .sk-tabella td {
+    padding: 1.6mm 2mm 1.6mm 0;
+    border-bottom: 0.3pt solid #ccc;
+    vertical-align: top;
+  }
+
+  .sk-num {
+    width: 9mm;
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 700;
+    font-size: 11pt;
+  }
+
+  .sk-ora     { width: 13mm; }
+  .sk-tempo   { width: 16mm; }
+  .sk-diafr   { width: 18mm; }
+  .sk-focale  { width: 16mm; }
+  .sk-nota    { color: #333; }
+
+  .sk-vuoto { color: #999; }
+
+  /* ─── piede: spazio per le note di sviluppo, a penna ─── */
+
+  .sk-piede {
+    margin-top: 8mm;
+    border-top: 0.8pt solid #000;
+    padding-top: 4mm;
+    font-size: 9pt;
+  }
+
+  .sk-righe-vuote {
+    margin-top: 3mm;
+    border-bottom: 0.3pt solid #999;
+    height: 7mm;
+  }
+
+  /* ─── indice, solo su esportazioni multiple ─── */
+
+  .sk-indice { break-after: page; }
+
+  .sk-indice ol {
+    margin: 4mm 0 0;
+    padding-left: 6mm;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .sk-indice li { margin-bottom: 2mm; }
+}

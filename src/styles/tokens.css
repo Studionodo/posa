@@ -1,0 +1,247 @@
+/**
+ * tokens.css — unica fonte di verita' per colore, forma, tipo, moto.
+ *
+ * Linguaggio: Material 3 Expressive (Android 16 QPR1, set 2025).
+ * Tipografia: serif, in deroga a M3. E' la deviazione voluta.
+ * Cromia: luce di sicurezza ambra su bruni di camera oscura.
+ * Firma: perforazione 35mm sul pannello contatore.
+ *
+ * Font self-hosted: l'app deve funzionare in modalita' aereo.
+ * Gelasio e non Georgia: Georgia e' proprietaria Microsoft, non
+ * ridistribuibile, e su Android non esiste. Gelasio e' OFL ed e'
+ * metricamente compatibile.
+ */
+
+@font-face {
+  font-family: 'Playfair Display';
+  src: url('/fonts/playfair-display-500.woff2') format('woff2');
+  font-weight: 500; font-display: block;
+}
+@font-face {
+  font-family: 'Playfair Display';
+  src: url('/fonts/playfair-display-700.woff2') format('woff2');
+  font-weight: 700; font-display: block;
+}
+/* Solo per il logotipo "Posa". Subsettato alle 4 lettere con
+   pyftsubset --text="Posa": ~3KB invece di 120. Non usarlo altrove. */
+@font-face {
+  font-family: 'Fraunces Marchio';
+  src: url('/fonts/fraunces-marchio.woff2') format('woff2');
+  font-weight: 700;
+  font-display: block;
+}
+
+@font-face {
+  font-family: 'Gelasio';
+  src: url('/fonts/gelasio-400.woff2') format('woff2');
+  font-weight: 400; font-display: block;
+}
+@font-face {
+  font-family: 'Gelasio';
+  src: url('/fonts/gelasio-600.woff2') format('woff2');
+  font-weight: 600; font-display: block;
+}
+
+:root {
+  /* ─── colore ────────────────────────────────────────────
+   *
+   * Il concetto non e' "fondo scuro con accento arancio": e' che
+   * tutto cio' che si vede e' illuminato dalla luce di sicurezza
+   * della camera oscura. L'ambiente e' bruno perche' e' quello che
+   * quella luce fa al buio; l'arancio non e' appoggiato sopra, e'
+   * la sorgente.
+   *
+   * Nell'ecosistema: Momento e' la luce dell'alba prima dello
+   * scatto, Tracce e' l'inchiostro di chi legge dopo, Posa e' la
+   * luce sotto cui il negativo prende forma. Tre momenti dello
+   * stesso mestiere.
+   *
+   * Nota di metodo: un primo tentativo con superfici grigio-blu
+   * fredde e' stato scartato. Il freddo combatteva la materia — la
+   * pellicola e' calda — e un velo arancione steso su fondo freddo
+   * produce fango, non bagliore.
+   */
+  --primary:      #E8834A;  /* luce di sicurezza, filtro ambra */
+  --primary-dim:  #C96A38;
+  --on-primary:   #1A0F08;
+  --critical:     #c0392b;  /* solo per l'irreversibile */
+  --on-critical:  #f4f0e8;
+
+  /* Cinque livelli con escursione ampia: 49 punti di luminanza
+     invece di 34. Le superfici si staccano davvero dal fondo,
+     invece di galleggiarci sopra — era quello a rendere piatta
+     l'interfaccia, non la temperatura. */
+  --surface:              #14100C;
+  --surf-cont-low:        #221A12;
+  --surf-cont:            #302518;
+  --surf-cont-high:       #40311F;
+  --surf-cont-highest:    #543F27;
+
+  --on-surface:      #F2EDE5;
+  --on-surface-var:  #A3927D;
+  --outline:         #5A452C;
+
+  /* Velo e bordo dell'accento: su fondo caldo l'ambra legge come
+     bagliore, non come sporco. */
+  --primary-tint:    rgba(232, 131, 74, 0.10);
+  --primary-border:  rgba(232, 131, 74, 0.55);
+
+  /* La luce dall'alto: un filetto chiaro sul bordo superiore delle
+     superfici sollevate. E' come si comporta la luce vera, e da'
+     rilievo senza ombre — che su fondo scuro fanno sporco. */
+  --luce-alto:  rgba(255, 232, 200, 0.07);
+
+  /* L'azione principale e' la carta bianca sotto l'ingranditore:
+     il punto piu' chiaro della schermata, quindi il piu' forte per
+     contrasto puro, senza aggiungere un terzo colore. */
+  --azione:     #F2EDE5;
+  --on-azione:  #1E1710;
+
+  /* ─── scala forme M3 ─── */
+  --r-xs:   4px;
+  --r-sm:   8px;
+  --r-md:  12px;
+  --r-lg:  16px;
+  --r-xl:  24px;
+  --r-full: 999px;
+
+  /* ─── tipografia: ruoli M3, facce serif ─── */
+  --display: 'Playfair Display', Georgia, serif;
+  --corpo:   'Gelasio', Georgia, serif;
+  --marchio: 'Fraunces Marchio', 'Playfair Display', Georgia, serif;
+
+  --t-contatore: clamp(56px, 19vw, 74px);
+  --t-headline:  19px;
+  --t-title:     20px;
+  --t-valore:    19px;
+  --t-body:      16px;
+  --t-label:     12px;
+
+  /* ─── spazio ─── */
+  --s1: 4px;  --s2: 8px;  --s3: 12px;
+  --s4: 16px; --s5: 24px; --s6: 32px;
+
+  /* ─── ergonomia: sotto i guanti, all'alba ─── */
+  --touch-min:      56px;
+  /* L'altezza serve al pollice, la dimensione del testo serve
+     all'occhio: sono esigenze diverse e massimizzarle entrambe
+     rendeva il piede pesante. 62px restano un bersaglio ampio. */
+  --touch-registra: 62px;
+
+  /* ─── moto: molla fisica, overshoot contenuto ─── */
+  --molla: cubic-bezier(0.2, 0.9, 0.25, 1.25);
+  --molla-durata: 260ms;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+/* Lo sfondo va dichiarato anche su html, non solo su body: nell'area
+   della barra di navigazione Android il body non arriva, e affiora il
+   colore predefinito del documento — da li' la striscia chiara in fondo
+   allo schermo. */
+/**
+ * Lo sfondo va sull'elemento radice, non solo su body: e' html che il
+ * browser propaga alla viewport. body e' alto quanto il suo contenuto,
+ * e quando non riempie lo schermo resta scoperto html sotto.
+ *
+ * overscroll-behavior: none impedisce il rimbalzo elastico oltre i
+ * bordi, che altrimenti riscopre l'area sottostante al trascinamento.
+ */
+html {
+  height: 100%;
+  margin: 0;
+  background: var(--surface);
+  color-scheme: dark;
+  overscroll-behavior: none;
+}
+
+/* Altezza dinamica: 100vh su mobile non tiene conto delle barre del
+   browser che compaiono e scompaiono durante lo scorrimento, e lascia
+   una banda scoperta in fondo allo schermo. */
+#root { height: 100dvh; margin: 0; }
+
+body {
+  min-height: 100%;
+  margin: 0;
+  background: var(--surface);
+  overscroll-behavior: none;
+  color: var(--on-surface);
+  font-family: var(--corpo);
+  font-size: var(--t-body);
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  /* Nessun padding qui: sommato all'altezza piena del contenitore
+     spingerebbe l'app verso l'alto lasciando una banda scoperta in
+     fondo. La safe area si gestisce dentro il piede dell'app. */
+}
+
+/* Nessun bordo in tutta l'app: la gerarchia la fanno superficie e peso. */
+button {
+  font-family: inherit;
+  color: inherit;
+  background: var(--surf-cont);
+  border: none;
+  min-height: var(--touch-min);
+  cursor: pointer;
+  transition:
+    transform var(--molla-durata) var(--molla),
+    border-radius var(--molla-durata) var(--molla),
+    background-color 120ms linear;
+}
+
+input, textarea {
+  font-family: var(--corpo);
+  font-size: var(--t-body);
+  color: var(--on-surface);
+  background: var(--surf-cont);
+  border: none;
+  border-radius: var(--r-lg);
+  min-height: var(--touch-min);
+  padding: 0 18px;
+  width: 100%;
+  outline: none;
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+input::placeholder { color: var(--on-surface-var); }
+
+:focus-visible {
+  outline: 3px solid var(--primary);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+.display { font-family: var(--display); letter-spacing: -0.02em; }
+
+/* Logotipo. Solo in Home, una volta. Mai come stile di testo corrente.
+   Markup: <h1 class="marchio">Posa<span class="marchio-punto">.</span></h1>
+   Il punto e' in oro: chiude il nome e lo rende una dichiarazione. */
+.marchio {
+  font-family: var(--marchio);
+  font-weight: 700;
+  font-size: 38px;
+  line-height: 1;
+  letter-spacing: -0.045em;
+  font-variation-settings: 'SOFT' 0, 'WONK' 1, 'opsz' 144;
+}
+
+.marchio-punto { color: var(--primary); }
+
+.label {
+  font-family: var(--corpo);
+  font-size: var(--t-label);
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--on-surface-var);
+}

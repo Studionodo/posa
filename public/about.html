@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Posa — Cos'è e cosa fa</title>
+  <style>
+    :root {
+      --bg:#14100C; --surface:#302518; --primary:#E8834A;
+      --testo:#F2EDE5; --testo-sec:#A3927D;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; padding: 48px 20px 80px; background: var(--bg); color: var(--testo);
+      font-family: Georgia, 'Times New Roman', serif; font-size: 17px; line-height: 1.65;
+    }
+    main { max-width: 680px; margin: 0 auto; }
+    h1 { font-size: 34px; font-weight: 700; letter-spacing: -0.02em; margin: 0 0 4px; }
+    .punto { color: var(--primary); }
+    .tagline {
+      color: var(--testo-sec); font-size: 15px; font-style: italic; margin: 0 0 8px;
+    }
+    .lingue {
+      display: flex; gap: 8px; margin: 24px 0 40px;
+    }
+    .lingue button {
+      font-family: inherit; font-size: 13px; letter-spacing: 0.06em;
+      text-transform: uppercase; padding: 8px 18px; border-radius: 999px;
+      border: none; cursor: pointer; background: var(--surface); color: var(--testo-sec);
+    }
+    .lingue button.attivo { background: var(--primary); color: #1A0F08; font-weight: 600; }
+    p { margin: 0 0 16px; }
+    strong { color: var(--primary); font-weight: 400; }
+    footer {
+      margin-top: 56px; padding-top: 24px; border-top: 1px solid #40311F;
+      color: var(--testo-sec); font-size: 14px;
+    }
+    [lang-block] { display: none; }
+    [lang-block].attivo { display: block; }
+  </style>
+</head>
+<body>
+<main>
+  <h1>Posa<span class="punto">.</span></h1>
+  <p class="tagline" data-it="Prima che la leva avanzi." data-en="Before the lever advances.">
+    Prima che la leva avanzi.
+  </p>
+
+  <div class="lingue">
+    <button data-lang="it" class="attivo">Italiano</button>
+    <button data-lang="en">English</button>
+  </div>
+
+  <div lang-block data-lang="it" class="attivo">
+    <p>Posa è il libro mastro delle pose su pellicola. Un fotografo carica un
+    rullino, registra ogni scatto con tempo, diaframma, focale, filtro e una
+    nota, poi registra lo sviluppo e archivia. Tutto in un'unica schermata,
+    senza scorrimento.</p>
+
+    <p>L'app calcola per te il <strong>difetto di reciprocità</strong> — la
+    perdita di sensibilità della pellicola sopra il secondo di esposizione —
+    con un timer integrato per le pose lunghe. Tiene traccia del push e pull,
+    segnala quando superi le pose nominali del rullino, e produce una scheda
+    stampabile con tutti i dati di ogni scatto.</p>
+
+    <p>Funziona interamente <strong>offline</strong>. Non ha account, non
+    raccoglie dati, non si connette a nessun server se non per il proprio
+    aggiornamento. Ogni informazione resta sul dispositivo su cui viene
+    scritta.</p>
+
+    <p>Posa è pensata per chi sviluppa a mano e vuole ripetere un risultato
+    riuscito: registrare l'esposizione con la stessa cura con cui si registra
+    lo sviluppo.</p>
+  </div>
+
+  <div lang-block data-lang="en">
+    <p>Posa is the exposure logbook for film photography. Load a roll, record
+    every frame with shutter speed, aperture, focal length, filter and a
+    note, then log the development and archive it. Everything on a single
+    screen, nothing to scroll.</p>
+
+    <p>The app calculates <strong>reciprocity failure</strong> for you — the
+    loss of film sensitivity above one second of exposure — with a built-in
+    timer for long exposures. It tracks push and pull, warns you when you
+    exceed a roll's nominal frame count, and produces a printable sheet with
+    every frame's data.</p>
+
+    <p>It works entirely <strong>offline</strong>. No account, no data
+    collection, no server connection except to update itself. Everything you
+    write stays on the device it was written on.</p>
+
+    <p>Posa is built for photographers who develop by hand and want to repeat
+    a result that worked: recording exposure with the same care you record
+    development.</p>
+  </div>
+
+  <footer>
+    &copy; 2026 Studionodo &middot; Tutti i diritti riservati
+  </footer>
+</main>
+
+<script>
+  document.querySelectorAll('.lingue button').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const lang = btn.dataset.lang;
+      document.querySelectorAll('.lingue button').forEach((b) => b.classList.toggle('attivo', b === btn));
+      document.querySelectorAll('[lang-block]').forEach((el) => el.classList.toggle('attivo', el.dataset.lang === lang));
+      document.querySelector('.tagline').textContent = document.querySelector('.tagline').dataset[lang];
+      document.documentElement.lang = lang;
+    });
+  });
+</script>
+</body>
+</html>
