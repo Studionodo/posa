@@ -1,6 +1,6 @@
 # POSA — Handover completo
 
-**Versione:** v43
+**Versione:** v43 · repository Git inizializzato
 **Data:** 12 agosto 2026
 **Produzione:** https://posa-three.vercel.app
 **Sorgente locale:** `C:\Users\nicol\posa`
@@ -16,9 +16,10 @@ raccolto.
 
 **Tagline:** *Prima che la leva avanzi.*
 
-Progetto personale di Nicola Papa, dal 12 agosto 2026 parte dell'ecosistema
-Istante Labs. PWA in produzione; pubblicazione su Play Store differita a dopo
-Momento, sotto lo stesso account sviluppatore.
+Progetto di Nicola Papa sotto il marchio Studionodo. PWA in produzione,
+sviluppata inizialmente nel contesto dell'ecosistema Istante Labs e poi
+uscita da quel contesto — vedi la nota di provenienza in fondo a questa
+sezione.
 
 ---
 
@@ -159,9 +160,15 @@ dalla luce di sicurezza della camera oscura.** L'ambiente è bruno perché è
 quello che quella luce fa al buio; l'arancio non è appoggiato sopra, è la
 sorgente.
 
-**Nell'ecosistema Istante Labs:** Momento è l'oro della luce dell'alba prima
-dello scatto, Tracce è il cinabro dell'inchiostro di chi legge dopo, Posa è
-l'ambra sotto cui il negativo prende forma. Tre momenti dello stesso mestiere.
+**Nota di provenienza:** la scelta dell'ambra è nata quando Posa era
+pensata come terzo prodotto di un ecosistema — Momento con l'oro della luce
+dell'alba prima dello scatto, Tracce con il cinabro dell'inchiostro di chi
+legge dopo, Posa con l'ambra sotto cui il negativo prende forma. Posa è poi
+uscita da quel contesto ed è oggi un progetto Studionodo autonomo: il footer
+dell'app, il manifest e il README riportano Studionodo, non più Istante Labs.
+La logica del colore resta valida di per sé — è la luce di sicurezza della
+camera oscura, non ha bisogno della cornice dell'ecosistema per avere senso
+— ma va letta come eredità concettuale, non come appartenenza attuale.
 
 ### Palette
 ```
@@ -413,10 +420,109 @@ noi.
 
 ---
 
+## 12-bis. Rebranding e messa in produzione — dopo v42
+
+Tra la v42 e la v43 sono successe tre cose distinte, in ordine.
+
+### Da Istante Labs a Studionodo
+
+Su richiesta di Nicola, Posa è uscita dall'ecosistema Istante Labs ed è
+diventata un progetto sotto il marchio **Studionodo**. Toccati quattro punti:
+
+- **Footer nell'app** (`src/screens/Home.jsx`): da `© 2026 Istante Labs ·
+  Tutti i diritti riservati` a `© 2026 Studionodo · Tutti i diritti riservati`
+- **`public/manifest.json`**: il campo `name` — quello che compare
+  all'installazione e sulla schermata d'avvio — da `Posa — by Istante Labs`
+  a `Posa — by Studionodo`
+- **`README.md`**: riscritto da zero. Prima conteneva comandi di build,
+  struttura tecnica, cosa non fare — tutto materiale da handover, non da
+  readme. Ora contiene solo la descrizione dell'app, cosa fa e come
+  funziona, in italiano e inglese
+- **`public/about.html`**: pagina nuova, stesso contenuto del README ma
+  navigabile dentro l'app tramite un link «Cos'è Posa» aggiunto sotto la
+  tagline in Home. Ha un selettore IT/EN, la stessa palette dell'interfaccia,
+  ed è inclusa nel `PRECACHE` del service worker per restare raggiungibile
+  offline
+
+**Nota lasciata aperta apposta:** `HANDOVER-POSA.md` (questo documento)
+conserva la logica cromatica costruita quando Posa era pensata come terzo
+colore di un ecosistema a tre prodotti (vedi sezione 6, "Nota di
+provenienza"). È un documento di lavoro per la continuità tecnica, non un
+file rivolto a chi usa l'app, quindi la storia concettuale del colore vale
+la pena tenerla anche se il contesto proprietario è cambiato.
+
+### Repository Git
+
+Il codice non aveva mai avuto una cronologia di versione — ogni deploy
+passava direttamente da cartella locale a Vercel via `vercel --prod`, senza
+lasciare traccia datata di chi avesse scritto cosa e quando. Creato il
+repository:
+
+- **`git init`** dentro `C:\Users\nicol\posa`
+- **`.gitignore`** con `node_modules/`, `dist/`, `.vercel/`, `.env.local` —
+  il primo tentativo di commit li aveva inclusi per errore, migliaia di file
+  di libreria che non appartengono al progetto e si rigenerano da soli
+- **Repository privato** `github.com/Studionodo/posa`
+- Due file scartati dal commit perché superati da versioni successive
+  dell'icona: `public/icons/icon-splash-1024.png`, `public/posa-logo-completo.png`
+
+**Identità Git impostata in locale, non globale**, per evitare esattamente
+il problema diagnosticato su un altro progetto (Arcanum) nella stessa
+sessione di lavoro: Git registra l'autore del commit da `user.name` e
+`user.email` configurati sul computer, indipendentemente da quale account
+si usa poi per autenticarsi. Se l'identità globale fosse rimasta legata a un
+account diverso da quello proprietario del repository — nel caso di Arcanum,
+un vecchio account "IstanteLabs" invece di "Studionodo" — Vercel avrebbe
+bloccato il deployment con l'errore *"the commit author did not have
+contributing access to the project"*, perché il piano Hobby non supporta
+collaboratori su repository privati.
+
+```
+cd C:\Users\nicol\posa
+git config user.name "Studionodo"
+git config user.email "nicolapapa88@gmail.com"
+```
+
+Senza `--global`: l'impostazione vale solo per questa cartella, lasciando
+intatta la configurazione per eventuali altri progetti sotto identità
+diverse.
+
+**Verifica prima di ogni push su un repository nuovo o ripreso dopo una
+pausa**, da ripetere per abitudine:
+
+```
+git config user.name
+git config user.email
+```
+
+Se non corrispondono al proprietario del repository di destinazione,
+impostarli in locale prima del push, non dopo — le build già inviate con
+l'identità sbagliata restano bloccate per sempre, non si correggono
+retroattivamente.
+
+### Flusso di lavoro da questo punto in poi
+
+Con GitHub collegato a Vercel via **Settings → Git → Connect Git
+Repository**, ogni `git push` su `main` genera da solo un deploy in
+produzione. Il comando `vercel --prod` a mano resta disponibile ma non è
+più il percorso normale:
+
+```
+git add .
+git commit -m "Posa vXX — descrizione della modifica"
+git push
+```
+
+---
+
 ## 13. Sul futuro
 
-**Play Store:** dopo Momento, stesso account sviluppatore, sotto brand Istante
-Labs. Serve la migrazione ad Android nativo con Capacitor.
+**Play Store:** valutata la pubblicazione nativa Android con Capacitor, stesso
+percorso tecnico già usato per Momento. Con l'uscita di Posa dall'ecosistema
+Istante Labs, la pubblicazione andrebbe sotto l'account sviluppatore e il
+brand Studionodo — non più sotto Istante Labs come previsto quando questa
+sezione era stata scritta la prima volta. Da confermare con Nicola quando si
+arriva al punto.
 
 **Android XR:** valutato. Le PWA non sono supportate sugli occhiali, solo app
 native; l'hardware arriva fra fine 2026 e 2027. Appunto per il futuro, non

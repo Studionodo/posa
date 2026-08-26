@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useLayoutEffect } from 'react';
 import {
   Chip, StrisciaPellicola, FotogrammaVuoto, Perforazione,
   PulsanteAzione, Sfumatura,
@@ -55,6 +55,22 @@ export default function Home({
     if (!inSelezione) { onApri(r.id); return; }
     setSelezione((p) => p.includes(r.id) ? p.filter((x) => x !== r.id) : [...p, r.id]);
   }
+
+  /* La sfumatura in alto dice "sopra c'e' altro": ha senso solo quando
+     la lista scorre davvero. Con un rullino solo restava comunque
+     accesa e mangiava la parte alta dell'unica card visibile — un
+     effetto pensato per la lista piena che diventava un difetto nella
+     lista corta. Si misura il contenuto reale invece di indovinare una
+     soglia sul numero di rullini, perche' l'altezza delle card cambia
+     con push/pull, chip e chiusura. */
+  const scrollRef = useRef(null);
+  const [scorre, setScorre] = useState(false);
+
+  useLayoutEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    setScorre(el.scrollHeight > el.clientHeight + 1);
+  }, [visibili.length, inSelezione]);
 
   const iconaHeader = {
     width: 44, minHeight: 44, marginTop: 2, borderRadius: V('r-full'),
@@ -171,8 +187,8 @@ export default function Home({
       </header>
 
       <div style={{ flex: 1, minHeight: 0, position: 'relative' }}>
-        <Sfumatura verso="basso" altezza={28} />
-        <div style={{ height: '100%', overflowY: 'auto', padding: '0 16px' }}>
+        {scorre && <Sfumatura verso="basso" altezza={28} />}
+        <div ref={scrollRef} style={{ height: '100%', overflowY: 'auto', padding: '0 16px' }}>
 
           {!visibili.length && (
             <FotogrammaVuoto>
@@ -284,42 +300,40 @@ export default function Home({
         <>
           <PulsanteAzione onClick={onNuovo} paddingBasso={0}>CARICA</PulsanteAzione>
 
-          {/* Sostegno al progetto: posizione fissa nel piede, si incontra
-              dopo aver usato l'app, non prima. */}
+          {/* Il blocco sotto CARICA aveva quattro righe di testo alla
+              stessa altezza visiva — Ko-fi, privacy, filetto, copyright —
+              che si leggevano come un'unica massa indistinta invece che
+              come sezioni separate. Il problema non era "poco spazio", era
+              gerarchia piatta: nessun elemento pesava piu' degli altri.
+
+              Ora Ko-fi resta un invito a se', staccato dal resto da un
+              margine reale. Privacy e copyright si compattano in un solo
+              blocco "informazioni" — stessa dimensione, stessa opacita',
+              separati da un punto invece che impilati su righe diverse:
+              si leggono come una singola nota a pie' di pagina, non come
+              due argomenti diversi. */}
           <div style={{
             textAlign: 'center', flexShrink: 0,
-            padding: '0 16px calc(18px + env(safe-area-inset-bottom))',
+            padding: '4px 16px calc(20px + env(safe-area-inset-bottom))',
           }}>
             <a href="https://ko-fi.com/istantelabs/tip"
               target="_blank" rel="noopener noreferrer"
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: 5,
-                color: V('on-surface-var'), fontFamily: V('corpo'),
+                color: V('primary'), fontFamily: V('corpo'),
                 fontSize: 11, letterSpacing: '0.06em', textTransform: 'uppercase',
-                textDecoration: 'none', padding: '8px 12px',
+                fontWeight: 600, textDecoration: 'none', padding: '8px 12px',
               }}>
               <span style={{ fontSize: 13 }} aria-hidden="true">&#9749;</span>
               Offrimi un caff&egrave;
             </a>
 
-            {/* Cosa l'app non fa: dichiararlo vale piu' di una privacy
-                policy che nessuno apre. */}
             <div style={{
-              fontSize: 11, letterSpacing: '0.04em',
-              color: V('on-surface-var'), opacity: 0.75, marginTop: 4,
+              fontSize: 10.5, letterSpacing: '0.03em', lineHeight: 1.7,
+              color: V('on-surface-var'), opacity: 0.55, marginTop: 14,
             }}>
               Offline &middot; Nessun account &middot; Nessun dato raccolto
-            </div>
-
-            <div style={{
-              height: 1, width: 120, margin: '12px auto 10px',
-              background: V('surf-cont-high'),
-            }} />
-
-            <div style={{
-              fontSize: 11, letterSpacing: '0.04em',
-              color: V('on-surface-var'), opacity: 0.6,
-            }}>
+              <br />
               &copy; 2026 Studionodo &middot; Tutti i diritti riservati
             </div>
           </div>
