@@ -335,6 +335,12 @@ export default function Home({
               Offline &middot; Nessun account &middot; Nessun dato raccolto
               <br />
               &copy; 2026 Studionodo &middot; Tutti i diritti riservati
+              {' '}&middot;{' '}
+              <a href="https://github.com/Studionodo"
+                target="_blank" rel="noopener noreferrer"
+                style={{ color: 'inherit', textDecoration: 'underline', textUnderlineOffset: 2 }}>
+                GitHub
+              </a>
             </div>
           </div>
         </>
