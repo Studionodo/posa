@@ -11,6 +11,8 @@
 
 const CACHE = 'posa-v43';
 
+/* Cio' senza cui l'app non parte offline. Se una di queste manca c'e'
+   un problema di build, non un asset decorativo assente. */
 const PRECACHE = [
   '/',
   '/index.html',
@@ -20,6 +22,11 @@ const PRECACHE = [
   '/icons/icon-192.png',
   '/icons/icon-512.png',
   '/icons/icon-maskable-512.png',
+];
+
+/* Risorse che migliorano l'esperienza ma non la reggono: se mancano si
+   degrada la tipografia, non si perde il funzionamento offline. */
+const PRECACHE_OPZIONALE = [
   '/fonts/playfair-display-500.woff2',
   '/fonts/playfair-display-700.woff2',
   '/fonts/fraunces-marchio.woff2',
@@ -27,10 +34,39 @@ const PRECACHE = [
   '/fonts/gelasio-600.woff2',
 ];
 
+/**
+ * Precache resiliente.
+ *
+ * addAll() e' atomico: se una sola risorsa risponde 404 l'intera
+ * promessa viene rigettata, l'evento install fallisce e il service
+ * worker non si attiva mai. Il risultato non e' un'app offline con i
+ * font sbagliati — e' un'app che non entra in cache e che senza rete
+ * non si apre affatto.
+ *
+ * E' un difetto silenzioso in sviluppo: con la rete tutto sembra
+ * funzionare e l'unico sintomo e' un ripiego tipografico che si scambia
+ * per una scelta di stile. Qui si aggiunge una risorsa alla volta,
+ * catturando i fallimenti singoli: un asset mancante degrada
+ * l'aspetto, non azzera l'offline.
+ */
+function aggiungiUnoAUno(cache, risorse, obbligatorie) {
+  return Promise.all(risorse.map((url) =>
+    cache.add(url).catch((err) => {
+      if (obbligatorie) {
+        console.error('[sw] risorsa essenziale non memorizzata:', url, err);
+      } else {
+        console.warn('[sw] risorsa opzionale assente, si prosegue:', url);
+      }
+      return null;
+    })
+  ));
+}
+
 self.addEventListener('install', (e) => {
   e.waitUntil(
     caches.open(CACHE)
-      .then((c) => c.addAll(PRECACHE))
+      .then((c) => aggiungiUnoAUno(c, PRECACHE, true)
+        .then(() => aggiungiUnoAUno(c, PRECACHE_OPZIONALE, false)))
       .then(() => self.skipWaiting())
   );
 });
